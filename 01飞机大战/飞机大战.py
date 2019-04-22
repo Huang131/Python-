@@ -115,37 +115,15 @@ class Enemplane(Plane):
             super().sheBullet()
 
 
-
-
-if __name__ == "__main__":
-
-    #1. 创建一个窗口，用来显示内容
-    screen = pygame.display.set_mode((480,890),0,32)
-
-    #2. 创建一个和窗口大小的图片，用来充当背景
-    background = pygame.image.load("./feiji/background.png").convert()
-
-    #创建一个飞机对象
-    heroPlane=HeroPlane("hero",screen)
-    
-    #创建一个敌人飞机
-    enemplane = Enemplane("enemy",screen)
-
-
-    while True:
-        screen.blit(background,(0,0))
-
-        heroPlane.display()
-
-        enemplane.move()
-        enemplane.sheBullet()
-        enemplane.display()
-
-        #判断是否点击了退出按钮
+#键盘控制
+def key_control(heroPlane):
+         #获取事件
         for event in pygame.event.get():
+            #是否退出
             if event.type == QUIT:
                 print('exit')
                 exit()
+            #是否点击键盘
             elif event.type == KEYDOWN:
                 if   event.key == K_a or event.key == K_LEFT:
                       print('left')
@@ -157,6 +135,32 @@ if __name__ == "__main__":
                     print('space')
                     heroPlane.sheBullet()
 
+def main():
+     #1. 创建一个窗口，用来显示内容
+    screen = pygame.display.set_mode((480,890),0,32)
+
+    #2. 创建一个和窗口大小的图片，用来充当背景
+    background = pygame.image.load("./feiji/background.png").convert()
+
+    #创建一个飞机对象
+    heroPlane=HeroPlane("hero",screen)
+    
+    #创建一个敌人飞机
+    enemplane = Enemplane("enemy",screen)
+
+    while True:
+        screen.blit(background,(0,0))
+        heroPlane.display()
+        enemplane.display()
+        enemplane.move()
+        enemplane.sheBullet()
+        pygame.display.update()
+        key_control(heroPlane)
         #通过延时来降低速度
         time.sleep(0.01)
-        pygame.display.update()
+        
+
+
+if __name__ == "__main__":
+    main()
+   
