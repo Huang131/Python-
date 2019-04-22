@@ -1,8 +1,12 @@
 #coding=utf-8
+import time
+import random
 import pygame
 from pygame.locals import *
 
+#玩家飞机
 class HeroPlane(object):
+
     def __init__(self,screen):
         #设置飞机默认位置
         self.x=230
@@ -18,11 +22,10 @@ class HeroPlane(object):
         #用来保存玩家飞机发出的子弹
         self.bulletList = []
 
-
     def display(self):
         self.screen.blit(self.image,(self.x,self.y))
         needDelItemList = []
-        
+
         #保存需要删除的对象信息
         for bullet in self.bulletList:
             if bullet.judge():
@@ -46,24 +49,27 @@ class HeroPlane(object):
         self.bulletList.append(newBullet)
 
 
- 
+# 子弹类
 class Bullet(object):
     def __init__(self,x,y,screen):
         self.x = x+40
         self.y = y-20
         self.screen=screen
         self.image=pygame.image.load("./feiji/bullet-3.gif").convert()
+
     def move(self):
         self.y -=2
+
     def display(self):
         self.screen.blit(self.image,(self.x,self.y))
+
     def judge(self):
         if self.y<0:
             return True
         else:
             return False
 
-
+# 敌人飞机
 class Enemplane(object):
     def __init__(self,screen):
         #设置敌机默认位置
@@ -78,8 +84,59 @@ class Enemplane(object):
 
         #敌机子弹
         self.bulletList=[]
+
+        self.direction = 'right'
+
     def display(self):
         self.screen.blit(self.image,(self.x,self.y))
+        needDelItemList = []
+
+        #保存需要删除的对象信息
+        for bullet in self.bulletList:
+            if bullet.judge():
+                needDelItemList.append(bullet)
+        #删除self.bulletList中需要删除的对象
+        for item in needDelItemList:
+            self.bulletList.remove(item)
+
+        for bullet in self.bulletList:
+            bullet.display()
+            bullet.move() 
+
+    def move(self):   
+        if self.direction == 'right':
+            self.x +=2
+        elif self.direction == 'left':
+            self.x -=2
+        
+        if self.x>480-50:
+            self.direction ='left'
+        elif self.x<0:
+            self.direction = 'right'
+
+    def sheBullet(self):
+        num = random.randint(1,100)
+        if num ==88:
+            newBullet = EnemyBullet(self.x,self.y,self.screen)
+            self.bulletList.append(newBullet)
+
+class EnemyBullet(object):
+    def __init__(self,x,y,screen):
+        self.x = x+30
+        self.y = y+30
+        self.screen = screen
+        self.image=pygame.image.load("./feiji/bullet-1.gif").convert()
+    def move(self):
+        self.y +=2
+
+    def display(self):
+        self.screen.blit(self.image,(self.x,self.y))
+    
+    def judge(self):
+        if self.y>890:
+            return True
+        else:
+            return False
 
 
 if __name__ == "__main__":
@@ -101,6 +158,9 @@ if __name__ == "__main__":
         screen.blit(background,(0,0))
 
         heroPlane.display()
+
+        enemplane.move()
+        enemplane.sheBullet()
         enemplane.display()
 
         #判断是否点击了退出按钮
@@ -118,4 +178,7 @@ if __name__ == "__main__":
                 elif event.key == K_SPACE:
                     print('space')
                     heroPlane.sheBullet()
+
+        #通过延时来降低速度
+        time.sleep(0.01)
         pygame.display.update()
