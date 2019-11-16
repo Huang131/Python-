@@ -4,7 +4,7 @@
 @Author: Huang
 @Date: 2019-10-24 18:55:52
 @LastEditors: Huang
-@LastEditTime: 2019-10-24 20:53:08
+@LastEditTime: 2019-10-24 23:53:26
 '''
 
 import argparse
@@ -36,8 +36,7 @@ parser.add_argument('-r',
                     help='循环列出文件夹下所有文件')
 
 # 用解析器解析命令行输入的参数
-args = parser.parse_args(
-)  # 分析参数,空表示无参数传入，也可以带参传入，例如：args = parser.parse_args(('-r','-a','.'))
+args = parser.parse_args()  # 分析参数,空表示无参数传入，也可以带参传入，例如：args = parser.parse_args(('-r','-a','.'))
 
 # 判断路径是否合法
 directory = args.path
